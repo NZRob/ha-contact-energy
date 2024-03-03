@@ -73,8 +73,9 @@ class ContactEnergyApi:
         if result.status_code == requests.codes.ok:
             _LOGGER.debug("Retrieved accounts")
             data = result.json()
-            self._accountId = data["accounts"][0]["id"]
-            self._contractId = data["accounts"][0]["contracts"][0]["contractId"]
+            _LOGGER.error(data)
+            self._accountId = data["accounts"][1]["id"]
+            self._contractId = data["accounts"][1]["contracts"][0]["contractId"]
         else:
             _LOGGER.error("Failed to fetch customer accounts %s", result.text)
             return False
