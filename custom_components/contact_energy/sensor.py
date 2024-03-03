@@ -6,9 +6,13 @@ import logging
 import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
+from homeassistant import config_entries
+from homeassistant.core import HomeAssistant
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, UnitOfEnergy
 from homeassistant.components.sensor import SensorEntity
+
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from homeassistant.components.recorder.models import StatisticData, StatisticMetaData
 from homeassistant.components.recorder.statistics import (
@@ -48,12 +52,17 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 SCAN_INTERVAL = timedelta(hours=3)
 
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    """Set up the platform async."""
-    email = config.get(CONF_EMAIL)
-    password = config.get(CONF_PASSWORD)
+async def async_setup_entry(
+    hass: HomeAssistant,
+    entry: config_entries.ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+    discovery_info=None,
+):
+    """Asynchronously set-up the entry."""
+    email = entry.data.get(CONF_EMAIL)
+    password = entry.data.get(CONF_PASSWORD)
 
-    usage_days = config.get(CONF_USAGE_DAYS)
+    usage_days = 10 #entry.data.get(CONF_USAGE_DAYS)
 
     api = ContactEnergyApi(email, password)
 
